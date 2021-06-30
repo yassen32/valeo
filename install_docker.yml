@@ -1,0 +1,24 @@
+- hosts: localhost
+  become: yes
+  tasks:
+    - name: test
+      shell: |
+        dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+        dnf list docker-ce
+
+    - name: Install docker-ce
+      dnf:
+        name: docker-ce
+        state: present
+
+    - name: Enable docker service
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Download docker-compoes binary
+      get_url:
+        url: "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-Linux-x86_64"
+        dest: /tmp/docker-compose
+        mode: '0775'
